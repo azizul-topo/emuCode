@@ -1,0 +1,262 @@
+1. Additionn
+.model small
+.stack 100h
+
+.data
+str1 db "Enter first number: $"
+str2 db 13,10,"Enter second number: $"
+str3 db 13,10,"The sum is: $"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    
+    ; Display first prompt
+    lea dx, str1
+    mov ah, 9
+    int 21h
+    
+    ; Read first number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bl, al
+    
+    ; Display second prompt
+    lea dx, str2
+    mov ah, 9
+    int 21h
+    
+    ; Read second number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bh, al
+    
+    ; Display sum prompt
+    lea dx, str3
+    mov ah, 9
+    int 21h
+    
+    ; Calculate sum
+    add bl, bh
+    add bl, '0'   ; Convert number to ASCII
+    mov dl, bl
+    
+    ; Display sum
+    mov ah, 2
+    int 21h
+    
+    ; Exit program
+    mov ah, 4Ch
+    int 21h
+main endp
+end
+
+
+2. Subtruction
+
+.model small
+.stack 100h
+
+.data
+str1 db "Enter first number: $"
+str2 db 13,10,"Enter second number: $"
+str3 db 13,10,"The difference is: $"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    
+    ; Display first prompt
+    lea dx, str1
+    mov ah, 9
+    int 21h
+    
+    ; Read first number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bl, al
+    
+    ; Display second prompt
+    lea dx, str2
+    mov ah, 9
+    int 21h
+    
+    ; Read second number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bh, al
+    
+    ; Display difference prompt
+    lea dx, str3
+    mov ah, 9
+    int 21h
+    
+    ; Calculate difference
+    sub bl, bh
+    add bl, '0'   ; Convert number to ASCII
+    mov dl, bl
+    
+    ; Display difference
+    mov ah, 2
+    int 21h
+    
+    ; Exit program
+    mov ah, 4Ch
+    int 21h
+main endp
+end
+
+
+3. Multiplication
+
+
+.model small
+.stack 100h
+
+.data
+str1 db "Enter first number: $"
+str2 db 13,10,"Enter second number: $"
+str3 db 13,10,"The product is: $"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    
+    ; Display first prompt
+    lea dx, str1
+    mov ah, 9
+    int 21h
+    
+    ; Read first number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bl, al
+    
+    ; Display second prompt
+    lea dx, str2
+    mov ah, 9
+    int 21h
+    
+    ; Read second number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bh, al
+    
+    ; Display product prompt
+    lea dx, str3
+    mov ah, 9
+    int 21h
+    
+    ; Calculate product
+    mov al, bl
+    mul bh  ; AX = AL * BH, result in AX
+    
+    ; Convert product to ASCII and display
+    mov cx, ax  ; Store the product in CX for further use
+
+    ; Handle tens place
+    mov ax, cx
+    mov bl, 10
+    div bl
+    add al, '0'
+    mov dl, al
+    mov ah, 2
+    int 21h
+
+    ; Handle units place
+    mov al, ah
+    add al, '0'
+    mov dl, al
+    mov ah, 2
+    int 21h
+    
+    ; Exit program
+    mov ah, 4Ch
+    int 21h
+main endp
+end
+
+
+4. Division
+
+
+.model small
+.stack 100h
+
+.data
+str1 db "Enter first number: $"
+str2 db 13,10,"Enter second number: $"
+str3 db 13,10,"The quotient is: $"
+str4 db 13,10,"Cannot divide by zero.$"
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+    
+    ; Display first prompt
+    lea dx, str1
+    mov ah, 9
+    int 21h
+    
+    ; Read first number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bl, al
+    
+    ; Display second prompt
+    lea dx, str2
+    mov ah, 9
+    int 21h
+    
+    ; Read second number
+    mov ah, 1
+    int 21h
+    sub al, '0'   ; Convert ASCII to number
+    mov bh, al
+    
+    ; Check if second number is zero
+    cmp bh, 0
+    je div_by_zero
+
+    ; Display quotient prompt
+    lea dx, str3
+    mov ah, 9
+    int 21h
+    
+    ; Calculate quotient
+    mov ax, 0       ; Clear AX
+    mov al, bl      ; Move first number to AL
+    div bh          ; AX = AL / BH, quotient in AL, remainder in AH
+    
+    ; Convert quotient to ASCII and display
+    add al, '0'     ; Convert number to ASCII
+    mov dl, al
+    mov ah, 2
+    int 21h
+
+    ; Exit program
+    mov ah, 4Ch
+    int 21h
+
+div_by_zero:
+    ; Display error message
+    lea dx, str4
+    mov ah, 9
+    int 21h
+    
+    ; Exit program
+    mov ah, 4Ch
+    int 21h
+main endp
+end
