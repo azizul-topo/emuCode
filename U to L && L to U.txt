@@ -1,0 +1,29 @@
+.STACK 100H
+.DATA
+.CODE
+MAIN PROC
+    MOV AH,01
+    INT 21H
+    MOV BL,AL
+    MOV AH,02
+    MOV DL,13
+    INT 21H
+    MOV AH,02
+    MOV DL,10
+    INT 21H
+    CMP BL,97
+    JGE SMALL_TO_BIG
+    BIG_TO_SMALL:
+    ADD BL,32
+    MOV AH,02
+    MOV DL,BL
+    INT 21H
+    JMP EXIT
+    SMALL_TO_BIG:
+    SUB BL,32
+    MOV AH,02
+    MOV DL,BL
+    INT 21H
+    EXIT:
+    MOV AH,4CH
+    INT 21H
