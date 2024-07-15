@@ -27,3 +27,76 @@ MAIN PROC
     EXIT:
     MOV AH,4CH
     INT 21H
+-----------------------------------------------
+.MODEL SMALL
+.STACK 100H
+
+.DATA
+    PROMPT DB "ENTER A CHARACTER: $"
+    INVALID_MSG DB 0DH, 0AH, "INVALID CHARACTER! $"
+
+.CODE
+MAIN PROC
+    MOV AX, @DATA
+    MOV DS, AX
+
+    ; Prompt for character input
+    LEA DX, PROMPT
+    MOV AH, 9
+    INT 21H
+
+    ; Read a character from the keyboard
+    MOV AH, 01 
+    INT 21H
+
+    ; Store the character in BL
+    MOV BL, AL
+
+    ; Newline
+    MOV AH, 02
+    MOV DL, 0DH
+    INT 21H
+    MOV DL, 0AH
+    INT 21H
+
+    ; Check if the character is a lowercase letter (between 'a' and 'z')
+    CMP BL, 'a'
+    JL CheckUppercase
+    CMP BL, 'z'
+    JG CheckUppercase
+
+    ; Convert lowercase to uppercase
+    SUB BL, 32
+    JMP Display
+
+CheckUppercase:
+    ; Check if the character is an uppercase letter (between 'A' and 'Z')
+    CMP BL, 'A'
+    JL InvalidCharacter
+    CMP BL, 'Z'
+    JG InvalidCharacter
+
+    ; Convert uppercase to lowercase
+    ADD BL, 32
+    JMP Display
+
+InvalidCharacter:
+    ; Display invalid character message
+    LEA DX, INVALID_MSG
+    MOV AH, 9
+    INT 21H
+    JMP Exit
+
+Display:
+    ; Display the converted character
+    MOV AH, 02 
+    MOV DL, BL 
+    INT 21H 
+
+Exit:
+    ; Terminate the program
+    MOV AH, 4CH 
+    INT 21H
+
+MAIN ENDP
+END MAIN
